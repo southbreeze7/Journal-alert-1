@@ -52,7 +52,7 @@
       ]
     },
     {
-  "labe2": "肝脏代谢",
+  "labe1": "肝脏代谢",
   "main": true,
   "weight": 3,
   "terms": [
@@ -76,7 +76,7 @@
   ]
     },
     {
-  "labe3": "脂肪组织与脂肪代谢",
+  "labe1": "脂肪组织与脂肪代谢",
   "main": true,
   "weight": 3,
   "terms": [
@@ -102,7 +102,7 @@
   ]
     },
     {
-  "labe4": "肌肉肝脏脂肪器官互作",
+  "labe1": "肌肉肝脏脂肪器官互作",
   "main": true,
   "weight": 4,
   "terms": [
@@ -147,12 +147,13 @@
   "exclude_doi_prefixes": [
     "10.1038/d41586"
   ],
+
   "tiers": {
-    "must_read": 12,
-    "worth_reading": 6,
-    "min_score": 3
-  {
-  "journals": [
+  "must_read": 12,
+  "worth_reading": 6,
+  "min_score": 3
+},
+"journals": [
     {
       "name": "The Lancet",
       "issn": "0140-6736",
