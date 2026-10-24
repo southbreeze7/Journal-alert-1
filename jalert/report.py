@@ -248,6 +248,7 @@ def build_markdown(
     return "\n".join(lines)
 
 
+
 def build_digest(
     *,
     day: str,
@@ -260,61 +261,74 @@ def build_digest(
 ) -> tuple[str, str]:
     """Return ``(title, markdown_body)`` for a push notification.
 
-    Layout rules - both are deliberate, and both have bitten us:
-
-    * one blank line **between** entries, so each item is its own paragraph.
-      Without it Markdown runs every entry together into a single block and
-      WeChat shows one long line of concatenated text.
-    * two trailing spaces **inside** an entry, which is Markdown's hard line
-      break. A bare newline is a "soft" break and most renderers collapse it
-      into a space, which would glue the title to the journal/date line.
+    Layout rules:
+    - One blank line between entries.
+    - Two trailing spaces inside an entry for Markdown hard line breaks.
     """
     project = cfg.get("project", {}).get("name", "文献日报")
-    must = [e for e in entries if tier_of(e["scored"].score, cfg.get("tiers", {})) == "must_read"]
+
+    must = [
+        e
+        for e in entries
+        if tier_of(e["scored"].score, cfg.get("tiers", {})) == "must_read"
+    ]
     must_ids = {id(e) for e in must}
     rest = [e for e in entries if id(e) not in must_ids]
+
     title = f"{project} {day}：新增 {len(entries)} 篇，必读 {len(must)} 篇"
 
     blocks: list[str] = []
     shown = 0
-    for entry in (must + rest):
+
+    for entry in must + rest:
         if shown >= max_items:
             break
+
         item = entry["item"]
         url = _link(item)
         star = "🔥" if id(entry) in must_ids else "·"
         hits = "、".join(entry["scored"].labels)
+
         if url:
             head = f"{star} [{_truncate(item.title, 120)}]({url})"
         else:
             head = f"{star} {_truncate(item.title, 120)}"
+
         meta = f"　　{item.journal} · {item.date} · 匹配 {hits}"
 
-# 获取论文摘要，最多显示 350 个字符
-abstract = _truncate(item.abstract, 350) if item.abstract else "暂无摘要"
+        # 获取论文摘要，最多显示 350 个字符
+        abstract = (
+            _truncate(item.abstract, 350)
+            if item.abstract
+            else "暂无摘要"
+        )
 
-# 组装论文推送内容
-blocks.append(
-    f"{head}  \n"
-    f"{meta}  \n"
-    f"摘要：{abstract}"
-)
+        # 组装论文推送内容
+        blocks.append(
+            f"{head}  \n"
+            f"{meta}  \n"
+            f"摘要：{abstract}"
+        )
 
+        shown += 1
 
-shown += 1
+    lines = [
+        f"抓取 {fetched_total} 篇 · 命中 {matched_total} 篇 · "
+        f"新增 **{len(entries)}** 篇"
+    ]
 
-lines = [f"抓取 {fetched_total} 篇 · 命中 {matched_total} 篇 · 新增 **{len(entries)}** 篇"]
-for block in blocks:
-    lines.append("")
-    lines.append(block)
+    for block in blocks:
+        lines.append("")
+        lines.append(block)
 
-if len(entries) > shown:
-    lines.append("")
-    lines.append(f"…… 其余 {len(entries) - shown} 篇见本地日报。")
+    if len(entries) > shown:
+        lines.append("")
+        lines.append(f"…… 其余 {len(entries) - shown} 篇见本地日报。")
 
     body = "\n".join(lines)
 
     if len(body) > max_chars:
+        # Cut back to a paragraph boundary so we never truncate mid-entry.
         cut = (
             body[:max_chars].rsplit("\n\n", 1)[0]
             or body[:max_chars].rsplit("\n", 1)[0]
@@ -322,4 +336,5 @@ if len(entries) > shown:
         body = cut + "\n\n……（已截断，完整内容见本地 Markdown 日报）"
 
     return title, body
+
 
