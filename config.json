@@ -1,6 +1,6 @@
 {
   "project": {
-    "name": "大气环境文献日报",
+    "name": "肌肉、脂肪和肝代谢",
     "timezone": "Asia/Shanghai"
   },
   "window": {
@@ -277,7 +277,7 @@
   "push": {
     "enabled": true,
     "skip_when_empty": true,
-    "max_items": 10,
+    "max_items": 5,
     "max_chars": 1800,
     "channels": {
       "serverchan": {
