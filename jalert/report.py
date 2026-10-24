@@ -289,8 +289,18 @@ def build_digest(
         else:
             head = f"{star} {_truncate(item.title, 120)}"
         meta = f"　　{item.journal} · {item.date} · 匹配 {hits}"
-        blocks.append(f"{head}  \n{meta}")
-        shown += 1
+
+# 获取论文摘要，最多显示 350 个字符
+abstract = _truncate(item.abstract, 350) if item.abstract else "暂无摘要"
+
+# 组装论文推送内容
+blocks.append(
+    f"{head}  \n"
+    f"{meta}  \n"
+    f"摘要：{abstract}"
+)
+
+shown += 1
 
     lines = [f"抓取 {fetched_total} 篇 · 命中 {matched_total} 篇 · 新增 **{len(entries)}** 篇"]
     for block in blocks:
