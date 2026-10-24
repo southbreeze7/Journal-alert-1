@@ -52,7 +52,7 @@
       ]
     },
     {
-  "label": "肝脏代谢",
+  "labe2": "肝脏代谢",
   "main": true,
   "weight": 3,
   "terms": [
@@ -76,7 +76,7 @@
   ]
     },
     {
-  "label": "脂肪组织与脂肪代谢",
+  "labe3": "脂肪组织与脂肪代谢",
   "main": true,
   "weight": 3,
   "terms": [
@@ -102,7 +102,7 @@
   ]
     },
     {
-  "label": "肌肉肝脏脂肪器官互作",
+  "labe4": "肌肉肝脏脂肪器官互作",
   "main": true,
   "weight": 4,
   "terms": [
