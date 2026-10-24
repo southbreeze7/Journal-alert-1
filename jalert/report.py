@@ -300,19 +300,23 @@ blocks.append(
     f"摘要：{abstract}"
 )
 
+
 shown += 1
 
-    lines = [f"抓取 {fetched_total} 篇 · 命中 {matched_total} 篇 · 新增 **{len(entries)}** 篇"]
-    for block in blocks:
-        lines.append("")
-        lines.append(block)
-    if len(entries) > shown:
-        lines.append("")
-        lines.append(f"…… 其余 {len(entries) - shown} 篇见本地日报。")
+lines = [f"抓取 {fetched_total} 篇 · 命中 {matched_total} 篇 · 新增 **{len(entries)}** 篇"]
+for block in blocks:
+    lines.append("")
+    lines.append(block)
 
-    body = "\n".join(lines)
-    if len(body) > max_chars:
-        # Cut back to a paragraph boundary so we never truncate mid-entry.
-        cut = body[:max_chars].rsplit("\n\n", 1)[0] or body[:max_chars].rsplit("\n", 1)[0]
-        body = cut + "\n\n……（已截断，完整内容见本地 Markdown 日报）"
-    return title, body
+if len(entries) > shown:
+    lines.append("")
+    lines.append(f"…… 其余 {len(entries) - shown} 篇见本地日报。")
+
+body = "\n".join(lines)
+if len(body) > max_chars:
+    # Cut back to a paragraph boundary so we never truncate mid-entry.
+    cut = body[:max_chars].rsplit("\n\n", 1)[0] or body[:max_chars].rsplit("\n", 1)[0]
+    body = cut + "\n\n……（已截断，完整内容见本地 Markdown 日报）"
+
+return title, body
+
